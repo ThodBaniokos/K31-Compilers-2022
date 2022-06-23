@@ -1,0 +1,115 @@
+name()  {
+    "John"
+}
+
+surname() {
+    "Doe"
+}
+
+fullname(first_name, sep, last_name) {
+    first_name + sep + last_name
+}
+
+name()
+surname()
+fullname(name(), " ", surname())
+
+output:
+
+John
+Doe
+John Doe
+
+----------------------------------------------------------------------------------------
+
+name() {
+        "John"
+    }
+
+    repeat(x) {
+        x + x
+    }
+
+    cond_repeat(c, x) {
+        if (c prefix "yes")
+            if("yes" prefix c)
+                repeat(x)
+            else
+                x
+        else
+            x
+    }
+
+    cond_repeat("yes", name())
+    cond_repeat("no", "Jane")
+
+
+output:
+
+JohnJohn
+Jane
+
+-----------------------------------------------------------------------------------------
+
+findLangType(langName) {
+        if ("Java" prefix langName)
+            if(langName prefix "Java")
+                "Static"
+            else
+                if(reverse "script" prefix reverse langName)
+                    "Dynamic"
+                else
+                    "Unknown"
+        else
+            if (reverse "script" prefix reverse langName)
+                "Probably Dynamic"
+            else
+                "Unknown"
+    }
+
+    findLangType("Java")
+    findLangType("Javascript")
+    findLangType("Typescript")
+
+output:
+
+Static
+Dynamic
+Probably Dynamic
+
+------------------------------------------------------------------------------------------
+
+blank file
+
+output:
+
+nothing, but should produce the smallest java program possible
+
+-----------------------------------------------------------------------------------------
+
+"yes" + if ("y" prefix "y") " correct" else " incorrect" + " input"
+"yes" + if ("y" prefix "n") " correct" else " incorrect" + " input"
+"yes" + if ("y" prefix "y") " correct" + " input" else " incorrect"
+reverse "yes" + if ("y" prefix "y") reverse "correct " + " input" else " incorrect"
+
+output:
+
+yes correct
+yes incorrect input
+yes correct input
+sey tcerroc input
+
+------------------------------------------------------------------------------------------
+
+foo () {
+    "bar"
+}
+
+if ("1" prefix "2123")
+	"Hi"
+else
+	foo() + "bar"
+
+output:
+
+barbar

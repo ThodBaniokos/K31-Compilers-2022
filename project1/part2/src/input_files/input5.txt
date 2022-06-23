@@ -1,0 +1,4 @@
+"yes" + if ("y" prefix "y") " correct" else " incorrect" + " input"
+"yes" + if ("y" prefix "n") " correct" else " incorrect" + " input"
+"yes" + if ("y" prefix "y") " correct" + " input" else " incorrect"
+reverse "yes" + if ("y" prefix "y") reverse "correct " + " input" else " incorrect"

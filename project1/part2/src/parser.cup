@@ -1,0 +1,139 @@
+/**
+ *  Package and Import Specifications
+ */
+import java_cup.runtime.*;
+
+/**
+ *  Usercode Components
+ */
+parser code {:
+    // Connect this parser to a scanner!
+    Scanner s;
+    Parser(Scanner s){ this.s=s; }
+:}
+
+/* define how to connect to the scanner! */
+scan with {: return s.next_token(); :};
+
+/**
+ *  Symbol Lists
+ */
+
+/* Terminals (tokens returned by the scanner). */
+terminal            IF, ELSE;
+terminal            REVERSE;
+terminal            PREFIX;
+terminal            RBRACE, LPAREN, RPAREN, METHOD_DEC;
+terminal            COMMA;
+terminal            CONCAT;
+terminal            IDENTIFIER;
+terminal String     STRING_LITERAL;        // our scanner provides strings
+
+/*  Non terminals */
+
+/* Program (or goal) */
+non terminal        program;
+non terminal        method_decl_list;
+non terminal        main_body;
+
+/* Method Declerations */
+non terminal        method_decl;
+non terminal        dec_arg_list;
+
+/* Method Calls */
+non terminal        method_call;
+non terminal        call_arg_list;
+
+/* Arguments */
+non terminal        arg;
+
+/* Method Body */
+non terminal        method_body;
+
+/* If Statement */
+non terminal        if_stmt;
+
+/* Expressions */
+non terminal        expr;
+
+/**
+ *  Precedence Declarations
+ */
+precedence left IF;
+precedence left CONCAT;
+precedence left REVERSE;
+
+start with program;
+
+/**
+ *  The Grammar Rules
+ */
+
+/* Program */
+program ::= method_decl_list:mdl main_body:mb  {:  System.out.println("public class Main {");
+                                                            System.out.println("\tpublic static void main(String[] args) {");
+                                                            System.out.println("\t\t" + mb);
+                                                            System.out.println("\t}");
+                                                            System.out.println("\n\t" + mdl);
+                                                            System.out.println("}"); :}
+            /* used when there's no declerations */
+            | main_body:mb                              {:  System.out.println("public class Main {");
+                                                            System.out.println("\tpublic static void main(String[] args) {");
+                                                            System.out.println("\t\t" + mb);
+                                                            System.out.println("\t}");
+                                                            System.out.println("}"); :}
+
+            | /* empty */                               {:  System.out.println("public class Main {");
+                                                            System.out.println("\tpublic static void main(String[] args) {");
+                                                            System.out.println("\t}");
+                                                            System.out.println("}"); :}
+            ;
+
+main_body ::= expr:e main_body:mb {: RESULT = "System.out.println(" + e + ");\n\t\t" + mb; :}
+           |  expr:e              {:  RESULT = "System.out.println(" + e + ");"; :}
+           ;
+
+method_decl_list ::= method_decl_list:mdl method_decl:md {: RESULT = mdl + "\n" + "\t" + md; :}
+                | method_decl:md                         {: RESULT = md; :}
+                ;
+
+/* Method Declerations */
+method_decl ::= IDENTIFIER:id LPAREN dec_arg_list:dal METHOD_DEC method_body:mb RBRACE {: RESULT = "public static String " + id + "(" + dal + ") {\n\t\t" + mb + "\n\t}\n"; :}
+            |   IDENTIFIER:id LPAREN METHOD_DEC method_body:mb RBRACE                  {: RESULT = "public static String " + id + "() {\n\t\t" + mb + "\n\t}\n"; :}
+            ;
+
+dec_arg_list ::=  arg:da COMMA dec_arg_list:dal {: RESULT = "String " + da + ", " + dal; :}
+                | arg:da                        {: RESULT = "String " + da; :}
+                ;
+
+/* Method Calls */
+method_call ::= IDENTIFIER:id LPAREN call_arg_list:cal RPAREN {: RESULT = id + "(" + cal + ")"; :}
+            |   IDENTIFIER:id LPAREN RPAREN                   {: RESULT = id + "()"; :}
+            ;
+
+call_arg_list ::= arg:a COMMA call_arg_list:cal {: RESULT = a + ", " + cal; :}
+            |     arg:a                         {: RESULT = a; :}
+            ;
+
+/* Arguments */
+arg ::= expr:e {: RESULT = e; :}
+    ;
+
+
+/* Method Body */
+method_body ::= expr:e {: RESULT = "return " + e + ";"; :}
+        ;
+
+
+/* If body */
+if_stmt ::= IF LPAREN expr:e1 PREFIX expr:e2 RPAREN expr:ib ELSE expr:eb {: RESULT = "(" + e2 + ".startsWith(" + e1 + ") ? " + ib + " : " + eb + ")"; :}
+        ;
+
+/* Expressions */
+expr ::= STRING_LITERAL:s        {: RESULT = "\"" + s + "\""; :}
+        | method_call:mc         {: RESULT = mc; :}
+        | IDENTIFIER:id          {: RESULT = id; :}
+        | expr:e1 CONCAT expr:e2 {: RESULT = e1 + " + " + e2; :}
+        | if_stmt:is             {: RESULT = is; :}
+        | REVERSE expr:e         {: RESULT = "new StringBuilder(" + e + ").reverse().toString()"; :}
+        ;

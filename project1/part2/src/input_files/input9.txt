@@ -1,0 +1,6 @@
+times3(str) {
+    str + str + str
+}
+
+
+times3("di") + reverse "yes" + if("Java" prefix "Javascript") reverse "YES" else "NO"

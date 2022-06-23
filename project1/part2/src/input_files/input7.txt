@@ -1,0 +1,11 @@
+findLangType(langName) {
+
+        if("yes" prefix "no")
+            "test"
+        else
+            "test1"
+    }
+
+    findLangType("Java")
+    findLangType("Javascript")
+    findLangType("Typescript")
