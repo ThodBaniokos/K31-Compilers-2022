@@ -3,9 +3,9 @@ Extra Material
 
 Compiler tools on [CyberZHG's Toolbox](https://cyberzhg.github.io/toolbox/), his [github page](https://github.com/CyberZHG/).
 
-Regular expression testing tool https://regex101.com/.
+[Regular expressiontesting tool](https://regex101.com/).
 
-Compiler Explorer [link](https://godbolt.org/).
+[Compiler Explorer](https://godbolt.org/).
 
 Course Project
 ==============
